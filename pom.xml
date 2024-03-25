@@ -155,9 +155,9 @@
 				<artifactId>jib-maven-plugin</artifactId>
 				<version>3.4.0</version>
 				<configuration>
-					<!-- <from>
+					<from>
 						<image>eclipse-temurin:21-jdk-alpine</image>
-					</from> -->
+					</from>
 					<to>
 						<image>docker.io/khoazamioza/external-service</image>
 					</to>
