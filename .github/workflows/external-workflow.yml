@@ -6,13 +6,11 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Java CI (External API)
+name: Java CI (External Service)
 
 on:
   push:
     branches: [ "**" ]
-    paths:
-      - 'externalapi/**'
 
 jobs:
   build-external-service:
@@ -20,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./externalapi
+        working-directory: ./
 
     steps:
     - uses: actions/checkout@v3
@@ -48,7 +46,6 @@ jobs:
           echo "IMAGE_TAG=${{1}}" >> $GITHUB_ENV  # Set environment variable using Env Files
         fi
     - name: Build and Push Docker Image (with tag)
-      working-directory: ./externalapi
       if: env.IMAGE_TAG != ''
       run: |
         ./mvnw clean package jib:dockerBuild -DskipTests
