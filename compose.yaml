@@ -1,0 +1,10 @@
+version: '3.6'
+services:
+  external-service:
+    build: .
+    ports:
+      - 8081:8081
+    networks:
+      - microservices
+networks:
+  microservices:
