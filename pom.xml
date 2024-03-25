@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.ubluetech</groupId>
-	<artifactId>externalapi</artifactId>
+	<artifactId>external-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>externalapi</name>
+	<name>external-service</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>21</java.version>
@@ -155,11 +155,11 @@
 				<artifactId>jib-maven-plugin</artifactId>
 				<version>3.4.0</version>
 				<configuration>
-					<from>
+					<!-- <from>
 						<image>eclipse-temurin:21-jdk-alpine</image>
-					</from>
+					</from> -->
 					<to>
-						<image>docker.io/khoazamioza/externalapi</image>
+						<image>docker.io/khoazamioza/external-service</image>
 					</to>
 				</configuration>
 			</plugin>
