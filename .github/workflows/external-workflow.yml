@@ -46,8 +46,10 @@ jobs:
     - name: Build and Push Docker Image (with tag)
       env:
         IMAGE_TAG: ${{ steps.tag-name.outputs.IMAGE_TAG }}
-      if: ${{ env.IMAGE_TAG != '' }}  # Only build and push if a tag is present
       run: |
-        ./mvnw clean package jib:dockerBuild -DskipTests -Djib.to.tags=${{ env.IMAGE_TAG }}
-        docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-        docker push ${{ secrets.DOCKER_USERNAME }}/external-service:${{ env.IMAGE_TAG }}
+        echo $IMAGE_TAG
+      # if: ${{ env.IMAGE_TAG != '' }}  # Only build and push if a tag is present
+      # run: |
+      #   ./mvnw clean package jib:dockerBuild -DskipTests -Djib.to.tags=${{ env.IMAGE_TAG }}
+      #   docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+      #   docker push ${{ secrets.DOCKER_USERNAME }}/external-service:${{ env.IMAGE_TAG }}
