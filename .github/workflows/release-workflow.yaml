@@ -6,12 +6,11 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Java CI (External Service)
+name: Java CI (External Service Release)
 
 on:
   release:
     types: [published]
-
 
 jobs:
   build-external-service:
