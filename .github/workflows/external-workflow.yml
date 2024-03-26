@@ -43,7 +43,7 @@ jobs:
       run: |
         if [[ ${{ github.ref }} =~ refs\/tags\/(.+) ]]; then
           echo "IMAGE_TAG=${{1}}" >> "$GITHUB_OUTPUT"
-          echo "Very well known: ${{1}}"
+          echo "Tag name: ${GITHUB_REF#refs/tags/}"
         fi
     - name: Build and Push Docker Image (with tag)
       env:
