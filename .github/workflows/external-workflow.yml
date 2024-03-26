@@ -9,13 +9,8 @@
 name: Java CI (External Service)
 
 on:
-  push:
-    branches:
-      - main
-      - 'release/**'
-    tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
-      - 'v[0-9]+.[0-9]+.[0-9]+-[a-zA-Z0-9]+'
+  release:
+    types: [published]
 
 
 jobs:
@@ -37,17 +32,13 @@ jobs:
     - name: Build with Maven (if compatible JDK found)
       run: ./mvnw verify
 
-    - name: Build and Publish Docker Image (on main branch with tag)
-      if: github.ref == 'refs/heads/main'  # Only run on main branch pushes
-      id: tag-name
+    - name: Extract tag name
+      id: vars
       run: |
-        if [[ ${{ github.ref }} =~ refs\/tags\/(.+) ]]; then
-          echo "IMAGE_TAG=${{1}}" >> "$GITHUB_OUTPUT"
-          echo "Tag name: ${GITHUB_REF#refs/tags/}"
-        fi
+        echo "tag_name=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
     - name: Build and Push Docker Image (with tag)
       env:
-        IMAGE_TAG: ${{ steps.tag-name.outputs.IMAGE_TAG }}
+        IMAGE_TAG: ${{ steps.vars.outputs.tag_name }}
       run: |
         echo $IMAGE_TAG
       # if: ${{ env.IMAGE_TAG != '' }}  # Only build and push if a tag is present
