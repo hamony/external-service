@@ -13,13 +13,8 @@ on:
     branches: [ "**" ]
 
 jobs:
-  build-external-service:
-    name: Build external api service
+  java-setup:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./
-
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 21
@@ -28,12 +23,22 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
         cache: maven
+
+  build-external-service:
+    name: Build external api service
+    needs: java-setup
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./
+    steps:
+    - uses: actions/checkout@v3
     - name: Build with Maven
       run: ./mvnw verify
 
   build-and-push-docker-image:  # New job for deployment
     name: Build and Publish Docker Image (on main branch with tag)
-    needs: build-external-service  # This job depends on successful build
+    needs: java-setup  # This job depends on successful build
     runs-on: ubuntu-latest  # Added missing `runs-on` property
     if: github.ref == 'refs/heads/main'  # Only run on main branch pushes
     env:  # Define environment variables here (optional)
@@ -48,5 +53,6 @@ jobs:
     - name: Build and Push Docker Image (with tag)
       if: env.IMAGE_TAG != ''
       run: |
-        ./mvnw clean verify 
-
+        ./mvnw clean package jib:dockerBuild -DskipTests
+        docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+        docker push ${{ secrets.DOCKER_USERNAME }}/external-service:${{ env.IMAGE_TAG }}
