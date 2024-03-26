@@ -35,8 +35,6 @@ jobs:
       if: github.ref == 'refs/heads/main'  # Only run on main branch pushes
       env:  # Define environment variables here (optional)
         IMAGE_TAG: "v0.1.0-alpha"
-        
-    - name: Extract Tag (if applicable)
       run: |
         if [[ ${{ github.ref }} =~ refs\/tags\/(.+) ]]; then
           echo "IMAGE_TAG=${{1}}" >> $GITHUB_ENV  # Set environment variable using Env Files
