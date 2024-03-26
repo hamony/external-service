@@ -12,6 +12,9 @@ on:
   push:
     branches: [ "**" ]
 
+env:  # Define environment variables here (optional)
+  IMAGE_TAG: "v0.1.1-alpha"
+
 jobs:
   build-external-service:
     name: Build external api service
@@ -33,15 +36,13 @@ jobs:
 
     - name: Build and Publish Docker Image (on main branch with tag)
       if: github.ref == 'refs/heads/main'  # Only run on main branch pushes
-      env:  # Define environment variables here (optional)
-        IMAGE_TAG: "v0.1.0-alpha"
       run: |
         if [[ ${{ github.ref }} =~ refs\/tags\/(.+) ]]; then
           echo "IMAGE_TAG=${{1}}" >> $GITHUB_ENV  # Set environment variable using Env Files
         fi
         echo ${{ env.IMAGE_TAG }}
     - name: Build and Push Docker Image (with tag)
-      if: env.IMAGE_TAG != ''  # Only build and push if a tag is present
+      if: ${{ env.IMAGE_TAG != '' }}  # Only build and push if a tag is present
       run: |
         ./mvnw clean package jib:dockerBuild -DskipTests
         docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
