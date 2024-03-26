@@ -10,10 +10,12 @@ name: Java CI (External Service)
 
 on:
   push:
-    branches: [ "**" ]
+    branches:
+      - main
+      - 'release/**'
+    tags:
+      - ^v(?:[0-9]{1,2}|99)\.[0-9]{1,2}\.[0-9]{1,2}(?:-[a-zA-Z0-9]+)?$
 
-env:  # Define environment variables here (optional)
-  IMAGE_TAG: "v0.1.0-alpha"
 
 jobs:
   build-external-service:
@@ -36,11 +38,14 @@ jobs:
 
     - name: Build and Publish Docker Image (on main branch with tag)
       if: github.ref == 'refs/heads/main'  # Only run on main branch pushes
+      id: tag-name
       run: |
         if [[ ${{ github.ref }} =~ refs\/tags\/(.+) ]]; then
-          echo "IMAGE_TAG=${{1}}" >> $GITHUB_ENV  # Set environment variable using Env Files
+          echo "IMAGE_TAG=${{1}}" >> "$GITHUB_OUTPUT"
         fi
     - name: Build and Push Docker Image (with tag)
+      env:
+        IMAGE_TAG: ${{ steps.tag-name.outputs.IMAGE_TAG }}
       if: ${{ env.IMAGE_TAG != '' }}  # Only build and push if a tag is present
       run: |
         ./mvnw clean package jib:dockerBuild -DskipTests -Djib.to.tags=${{ env.IMAGE_TAG }}
