@@ -36,9 +36,9 @@ jobs:
       env:  # Define environment variables here (optional)
         IMAGE_TAG: "v0.1.0-alpha"
       run: |
-        # if [[ ${{ github.ref }} =~ refs\/tags\/(.+) ]]; then
-        #   echo "IMAGE_TAG=${{1}}" >> $GITHUB_ENV  # Set environment variable using Env Files
-        # fi
+        if [[ ${{ github.ref }} =~ refs\/tags\/(.+) ]]; then
+          echo "IMAGE_TAG=${{1}}" >> $GITHUB_ENV  # Set environment variable using Env Files
+        fi
         echo ${{ env.IMAGE_TAG }}
     - name: Build and Push Docker Image (with tag)
       if: env.IMAGE_TAG != ''  # Only build and push if a tag is present
