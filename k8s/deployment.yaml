@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: external-service-deployment
+  labels:
+    app: external-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: external-service
+  template:
+    metadata:
+      labels:
+        app: external-service
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - name: external-service
+        image: external-service:v0.1.0-alpha
+        resources:
+          limits:
+            cpu: "1"
+            memory: "1Gi"
